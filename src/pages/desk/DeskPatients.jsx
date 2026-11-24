@@ -141,9 +141,6 @@ export default function DeskPatients() {
         email: '',
         medicalHistory: '',
       })
-
-      // Automatically offer to book for this new patient
-      setBookingPatient(created)
     } catch (err) {
       setRegError(err.message)
     } finally {
@@ -455,7 +452,7 @@ export default function DeskPatients() {
               disabled={regLoading}
               loading={regLoading}
             >
-              {regLoading ? 'Registering…' : 'Register & Book'}
+              {regLoading ? 'Registering…' : 'Register Patient'}
             </Button>
           </div>
         </form>
