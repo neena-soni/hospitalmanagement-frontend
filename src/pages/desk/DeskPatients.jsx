@@ -66,6 +66,20 @@ export default function DeskPatients() {
   const [bookingError, setBookingError] = useState('')
   const [bookingSuccess, setBookingSuccess] = useState('')
 
+  const handleOpenDeskBooking = (patient) => {
+    setBookingError('')
+    setBookingSuccess('')
+    setBookingReason('')
+    setBookingPatient(patient)
+  }
+
+  const handleCloseDeskBooking = () => {
+    setBookingPatient(null)
+    setBookingError('')
+    setBookingSuccess('')
+    setBookingReason('')
+  }
+
   // 1. Initial Load: Load all patients & doctors
   useEffect(() => {
     loadPatients()
@@ -104,6 +118,8 @@ export default function DeskPatients() {
 
   // 3. Whenever selectedDoctorId or selectedDate changes in booking modal, check capacity
   useEffect(() => {
+    setBookingError('')
+    setBookingSuccess('')
     if (!selectedDoctorId || !selectedDate) return
     getDoctorCapacity(Number(selectedDoctorId), selectedDate)
       .then(setSelectedDoctorCapacity)
@@ -308,7 +324,7 @@ export default function DeskPatients() {
                           <Button
                             variant="secondary"
                             size="sm"
-                            onClick={() => setBookingPatient(p)}
+                            onClick={() => handleOpenDeskBooking(p)}
                           >
                             <Calendar size={13} className="text-clay" />
                             <span>Book Appointment</span>
@@ -461,7 +477,7 @@ export default function DeskPatients() {
       {/* 5. Desk Booking Modal (Booking for Selected Patient) */}
       <Modal
         isOpen={!!bookingPatient}
-        onClose={() => setBookingPatient(null)}
+        onClose={handleCloseDeskBooking}
         title={`Book for ${bookingPatient?.name}`}
       >
         {bookingPatient && (
@@ -553,7 +569,7 @@ export default function DeskPatients() {
                 variant="secondary"
                 size="md"
                 type="button"
-                onClick={() => setBookingPatient(null)}
+                onClick={handleCloseDeskBooking}
               >
                 Cancel
               </Button>

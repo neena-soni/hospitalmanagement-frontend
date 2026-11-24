@@ -95,6 +95,26 @@ export default function DoctorDiscovery({
   const [bookingError, setBookingError] = useState('')
   const [bookingSuccess, setBookingSuccess] = useState('')
 
+  // Clear booking modal feedback whenever the active patient or date changes
+  useEffect(() => {
+    setBookingError('')
+    setBookingSuccess('')
+  }, [activeSelectedId, selectedDate])
+
+  const handleOpenBooking = (doctor) => {
+    setBookingError('')
+    setBookingSuccess('')
+    setReason('')
+    setBookingDoctor(doctor)
+  }
+
+  const handleCloseBooking = () => {
+    setBookingDoctor(null)
+    setBookingError('')
+    setBookingSuccess('')
+    setReason('')
+  }
+
   // 1. Load specialties & existing patients on mount
   useEffect(() => {
     getSpecialties()
@@ -465,7 +485,7 @@ export default function DoctorDiscovery({
                     <Button
                       size="sm"
                       disabled={!canBook}
-                      onClick={() => setBookingDoctor(doctor)}
+                      onClick={() => handleOpenBooking(doctor)}
                     >
                       Book Slot
                     </Button>
@@ -614,7 +634,7 @@ export default function DoctorDiscovery({
       {/* 2. Book Appointment Modal */}
       <Modal
         isOpen={!!bookingDoctor}
-        onClose={() => setBookingDoctor(null)}
+        onClose={handleCloseBooking}
         title={`Book Appointment`}
       >
         {bookingDoctor && (
@@ -695,7 +715,7 @@ export default function DoctorDiscovery({
                 variant="secondary"
                 size="md"
                 type="button"
-                onClick={() => setBookingDoctor(null)}
+                onClick={handleCloseBooking}
               >
                 Cancel
               </Button>
