@@ -17,7 +17,8 @@ import Button from '../../components/ui/Button'
 export default function MyProfile({ patientId, onPatientUpdated }) {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [error, setError] = useState('')
+  const [loadError, setLoadError] = useState('')
+  const [saveError, setSaveError] = useState('')
   const [success, setSuccess] = useState('')
   const [isEditing, setIsEditing] = useState(false)
 
@@ -42,7 +43,7 @@ export default function MyProfile({ patientId, onPatientUpdated }) {
 
   const loadProfile = () => {
     setLoading(true)
-    setError('')
+    setLoadError('')
     getPatientById(patientId)
       .then((data) => {
         setForm({
@@ -55,7 +56,7 @@ export default function MyProfile({ patientId, onPatientUpdated }) {
           medicalHistory: data.medicalHistory || '',
         })
       })
-      .catch((err) => setError(err.message))
+      .catch((err) => setLoadError(err.message))
       .finally(() => setLoading(false))
   }
 
@@ -65,7 +66,7 @@ export default function MyProfile({ patientId, onPatientUpdated }) {
     if (saving) return
 
     setSaving(true)
-    setError('')
+    setSaveError('')
     setSuccess('')
 
     try {
@@ -85,7 +86,7 @@ export default function MyProfile({ patientId, onPatientUpdated }) {
       }
       setTimeout(() => setSuccess(''), 3000)
     } catch (err) {
-      setError(err.message)
+      setSaveError(err.message)
     } finally {
       setSaving(false)
     }
@@ -116,13 +117,13 @@ export default function MyProfile({ patientId, onPatientUpdated }) {
           </p>
         </div>
 
-        {!loading && !error && (
+        {!loading && !loadError && (
           <Button
             variant={isEditing ? 'secondary' : 'primary'}
             size="sm"
             onClick={() => {
               setIsEditing(!isEditing)
-              setError('')
+              setSaveError('')
               setSuccess('')
             }}
           >
@@ -139,14 +140,17 @@ export default function MyProfile({ patientId, onPatientUpdated }) {
         </Card>
       )}
 
-      {error && (
-        <Card className="border-brick/30 bg-brick/5 text-center py-8">
-          <p className="text-brick font-medium">{error}</p>
+      {loadError && (
+        <Card className="border-brick/30 bg-brick/5 text-center py-8 space-y-3">
+          <p className="text-brick font-medium">{loadError}</p>
+          <Button variant="secondary" size="sm" onClick={loadProfile}>
+            Retry Loading
+          </Button>
         </Card>
       )}
 
       {/* 2. Main Profile Card */}
-      {!loading && !error && (
+      {!loading && !loadError && (
         <form onSubmit={handleSave} className="space-y-6">
           {/* Identity Summary Bar */}
           <Card className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between bg-sand/40 border border-ink/10">
@@ -188,10 +192,10 @@ export default function MyProfile({ patientId, onPatientUpdated }) {
             </div>
           )}
 
-          {error && (
+          {saveError && (
             <div className="flex items-center gap-2.5 rounded-2xl bg-brick/10 border border-brick/30 p-4 text-xs text-brick font-medium animate-fadeIn">
               <AlertCircle size={16} />
-              <span>{error}</span>
+              <span>{saveError}</span>
             </div>
           )}
 
@@ -358,6 +362,7 @@ export default function MyProfile({ patientId, onPatientUpdated }) {
                   type="button"
                   onClick={() => {
                     setIsEditing(false)
+                    setSaveError('')
                     loadProfile()
                   }}
                 >
