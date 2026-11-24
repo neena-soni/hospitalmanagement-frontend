@@ -1,0 +1,53 @@
+@import "tailwindcss";
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/inter";
+
+
+
+/* Tailwind reads these variables and creates class names from them. --color-clay gives you bg-clay, text-clay and border-clay. */
+@theme {
+  --color-ink: #2b2521;
+  --color-clay: #bf512c;
+  --color-brick: #9c2f1c;
+  --color-brass: #957445;
+  --color-sand: #e8ded1;
+  --color-canvas: #fbf9f6;
+  --color-peach: #d8c7b0;
+  --color-craft: #d2c1aa;
+
+  --font-display: "Fraunces Variable", Georgia, serif;  /*main font : fraunces variable and others fallback fonts.*/
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+
+  --radius-card: 1.75rem;
+
+  --shadow-soft: 0 10px 30px -12px rgb(90 55 30 / 0.22);
+}
+
+
+/*default styles which are applied to all elements and can be overriden by component-specific styles*/
+@layer base {
+  html {
+    min-height: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    /* Warm craft paper background sampled directly from the logo artwork */
+    background-color: #d2c1aa;
+    background-image:
+      radial-gradient(ellipse at top right, #e4d8c7 0%, transparent 60%),
+      radial-gradient(ellipse at bottom left, #bfae95 0%, transparent 55%);
+    background-attachment: fixed; /*keeps the background image fixed while scrolling*/
+  }
+
+
+  /*Every heading uses the display font i.e. Fraunces Variable */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+}
